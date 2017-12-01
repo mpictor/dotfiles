@@ -1,0 +1,47 @@
+#!/bin/bash
+
+function show_help {
+cat << EOH
+$0 [-l] [-p] command args...
+   -l: suppress LD_LIBRARY_PATH
+   -p: clean PATH, removing entries referencing \$HOME, inin, p4v
+   -d: debug (prints command before executing)
+EOH
+}
+
+#clean PATH, removing entries referencing \$HOME, inin, p4v
+function clean_path {
+  tr ':' '\n' <<<$PATH |\
+  grep -ve $HOME -e inin -e opt/p4v -e ^$ |\
+  tr '\n' ':' |\
+  sed 's/:$//;'
+}
+
+OPTIND=1
+env=''
+debug=0
+
+while getopts "h?lpd" opt; do
+    case "$opt" in
+    h|\?)
+        show_help
+        exit 0
+        ;;
+    l)  env='env -u LD_LIBRARY_PATH'
+        ;;
+    p)  PATH=`clean_path`
+        ;;
+    d)  debug=1
+        ;;
+    esac
+done
+
+shift $((OPTIND-1))
+
+[ "$1" = "--" ] && shift
+
+[[ $debug -eq 1 ]] && echo "PATH=$PATH $env $@"
+
+PATH=$PATH $env $@ 2>/dev/null >/dev/null &
+
+unset OPTIND env debug

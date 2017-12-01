@@ -1,0 +1,21 @@
+#!/usr/bin/python2.7
+
+import dbus
+import time
+import signal, sys
+
+#if len(sys.argv) != 3 :
+#  sys.stderr.write('Usage: pm-inhibit.py <appname> <reason>\n')
+#  sys.exit(1)
+
+bus = dbus.Bus(dbus.Bus.TYPE_SESSION)
+#devobj = bus.get_object('org.kde.kded', '/org/kde/Solid/PowerManagement/PolicyAgent')
+devobj = bus.get_object('org.kde.Solid.PowerManagement.PolicyAgent', '/org/kde/Solid/PowerManagement/PolicyAgent')
+dev = dbus.Interface (devobj, "org.kde.Solid.PowerManagement.PolicyAgent")
+# 1=interrupt session 2=change profile 4=change screen settings
+cookie1 = dev.AddInhibition(1, sys.argv[0], "running")
+#cookie2 = dev.AddInhibition(2, sys.argv[1], sys.argv[2])
+#cookie3 = dev.AddInhibition(4, sys.argv[1], sys.argv[2])
+
+while 1 == 1 :
+        time.sleep(30)

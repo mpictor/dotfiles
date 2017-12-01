@@ -1,0 +1,2 @@
+#!/bin/sh
+sed -n "/FUNCTION  *$1 *[ ;]/,/END_FUNCTION/p;" < $2

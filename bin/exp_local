@@ -1,0 +1,2 @@
+#!/bin/sh
+sed -n "/LOCAL *[ ;]/,/END_LOCAL/p;" < $1

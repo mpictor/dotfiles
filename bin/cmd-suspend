@@ -1,0 +1,4 @@
+#!/bin/sh
+DISPLAY=:0
+qdbus org.freedesktop.PowerManagement /org/kde/Solid/PowerManagement suspendToRam
+

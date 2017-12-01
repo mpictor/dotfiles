@@ -1,0 +1,2 @@
+#!/bin/sh
+sed -n "/ENTITY  *$1 *;?$/,/END_ENTITY/p;" < $2

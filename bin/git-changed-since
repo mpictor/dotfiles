@@ -1,0 +1,11 @@
+#!/bin/bash
+#git log --name-only --pretty=oneline --full-index 0e637dee55..HEAD | grep -vE '^[0-9a-f]{40} ' | sort | uniq
+#list files changed between $1 and HEAD
+if [ -n "$1" ]
+then
+  git log --name-only --pretty=oneline --full-index $1..HEAD | grep -vE '^[0-9a-f]{40} ' | sort | uniq
+else
+  echo Use:
+  echo $0 tree-ish
+  echo Print sorted list of files changed between \$1 and HEAD
+fi
