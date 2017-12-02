@@ -1,0 +1,7 @@
+[Unit]
+Description=http 8080 service
+After=network.target
+
+[Service]
+ExecStart=/home/mark/go/bin/httpDir
+WorkingDirectory=/opt/www8080

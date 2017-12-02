@@ -1,0 +1,10 @@
+[Unit]
+Description=meshcentral 1024 socket
+Conflicts=mesh1024.service
+
+[Socket]
+ListenStream=1024
+Accept=no
+
+[Install]
+WantedBy=sockets.target

@@ -1,0 +1,10 @@
+[Unit]
+Description=http 8080 socket
+Conflicts=www8080.service
+
+[Socket]
+ListenStream=8080
+Accept=no
+
+[Install]
+WantedBy=sockets.target

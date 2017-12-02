@@ -1,0 +1,7 @@
+[Unit]
+Description=logServer 6514 service
+After=network.target
+
+[Service]
+ExecStart=/home/mark/inin/dca/hwinfra/gopath/bin/logServer -logdir /opt/www8080/logserver
+WorkingDirectory=/opt/www8080/logserver

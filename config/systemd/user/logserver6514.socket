@@ -1,0 +1,10 @@
+[Unit]
+Description=logserver 6514 socket
+Conflicts=logserver6514.service
+
+[Socket]
+ListenStream=6514
+Accept=no
+
+[Install]
+WantedBy=sockets.target

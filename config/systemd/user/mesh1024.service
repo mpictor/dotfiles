@@ -1,0 +1,7 @@
+[Unit]
+Description=meshcentral 1024 service
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/node meshcentral --notls
+WorkingDirectory=/home/mark/experiments/meshcentral2/

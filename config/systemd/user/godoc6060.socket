@@ -1,0 +1,10 @@
+[Unit]
+Description=godoc 6060 socket
+Conflicts=godoc6060.service
+
+[Socket]
+ListenStream=6060
+Accept=no
+
+[Install]
+WantedBy=sockets.target
