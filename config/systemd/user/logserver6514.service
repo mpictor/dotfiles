@@ -3,5 +3,6 @@ Description=logServer 6514 service
 After=network.target
 
 [Service]
-ExecStart=/home/mark/inin/dca/hwinfra/gopath/bin/logServer -logdir /opt/www8080/logserver
+ExecStart=/home/mark/inin/dca/hwinfra/gopath/bin/logServer -logDir /opt/www8080/logserver -printDir /opt/www8080/logserver/print -macLog /opt/www8080/logserver/mac/macs.csv -ipmiMacLog /opt/www8080/logserver/mac/ipmimacs.csv -pairLog /opt/www8080/logserver/pair/pairing.csv -rawDir /opt/www8080/logserver/raw
+
 WorkingDirectory=/opt/www8080/logserver

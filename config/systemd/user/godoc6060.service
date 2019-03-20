@@ -3,6 +3,6 @@ Description=godoc 6060 service
 After=network.target
 
 [Service]
-Environment="GOPATH=/home/mark/inin/dca/hwinfra/gopath:/mnt/raid/inin/builds/corego_main_systest/pub/resources/golang:/mnt/raid/inin/builds/tools_logskim.latest_systest/pub/resources/golang"
-ExecStart=/home/mark/go/bin/godoc -http :6060 -timestamps -index -index_throttle .1
+Environment="GOPATH=/home/mark/inin/dca/hwinfra/gopath:/home/mark/inin/dca/build/go"
+ExecStart=/usr/local/go/bin/godoc -http :6060 -timestamps -notes '(BUG|TODO|NOTE|FIXME)'
 WorkingDirectory=/home/mark/inin/dca/hwinfra/gopath
