@@ -2,6 +2,9 @@
 
 script_dir=$(dirname $(realpath $(which $0)))
 
+#ugly ugly fonts
+export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on"
+
 err_usage(){
   cat <<EOU
 use: $0 ip username password
@@ -22,6 +25,13 @@ EOU
 exit 1
 }
 
+dump=0
+if [[ $1 == "-d" ]]; then
+  shift
+  echo "dumping jnlp, not running java"
+  dump=1
+fi
+
 if [[ -f $script_dir/.ipmi-defaults ]]; then
   source $script_dir/.ipmi-defaults
 fi
@@ -31,9 +41,30 @@ HOST=${1:-$DEF_HOST}
 
 ping -c1 $HOST || err_usage
 
-jnlp=$(mktemp)
-curl "http://${HOST}" 2>/dev/null | grep -q "ATEN International Co Ltd"
-if [ $? -eq 0 ]; then
+if [[ $dump -eq 0 ]]; then
+  jnlp=$(mktemp)
+else
+  jnlp=/dev/stderr
+fi
+
+home=$(curl "http://${HOST}")
+rc=$?
+if [ $rc -ne 0 ]; then
+  echo "curl error $rc, retry with ip from /etc/hosts..."
+  ip=$(grep ' $HOST$' /etc/hosts|cut -d ' ' -f1)
+  if [ "x$ip" == "x" ]; then
+    echo "error, exiting"
+    exit 1
+  fi
+  HOST=$ip
+  home=$(curl "http://${HOST}")
+  rc=$?
+fi
+if [ $rc -ne 0 ]; then
+  echo "curl exited with $rc... you may need to use a FQDN to make it happy"
+  exit $rc
+fi
+if grep -q "ATEN International Co Ltd" <<<"$home" ; then
   echo "detected ATEN implementation"
   #some supermicro use ATEN
   #derived from https://gist.github.com/DavidWittman/10748460
@@ -48,13 +79,13 @@ else
   curl -kL "http://${HOST}" 2>/dev/null | grep -q "Avocent Corporation"
   if [ $? -eq 0 ]; then
     echo "detected Avocent implementation"
-    echo "not implemented!!!"
+    echo "not fully implemented!!!"
     USER=${2:-$DEF_AVO_USER}
     PASS=${3:-$DEF_AVO_PW}
     auth="user=$USER&password=$PASS"
    curl -kL --data "$auth" https://$HOST/data/login -D h -o b
     curl -kL --cookie Cookie=SessionCookie=$COOKIE "https://$HOST/data?type=jnlp&get=vmStart($HOST@0@$(date +%s)" -o $jnlp 2>/dev/null
-     echo "$jnlp not supported";rm $jnlp;exit
+     echo "Avocent not supported";rm $jnlp;exit
   else
     #http://stackoverflow.com/questions/26160165/supermirco-ipmi-kvm-remote-connection-without-webbrowser/28040677#28040677
     echo "detected AMI implementation"
@@ -68,4 +99,6 @@ else
 
 fi
 
-(javaws $jnlp >/dev/null 2>&1; rm $jnlp) &
+if [[ $dump -eq 0 ]]; then
+  (javaws $jnlp >/dev/null 2>&1; rm $jnlp) &
+fi

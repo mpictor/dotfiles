@@ -15,16 +15,19 @@ if [[ $- != *i* ]] ; then
 fi
 
 
-export GOROOT=/usr/lib64/go
-export GOPATH=/home/mark/go
-PATH="~/bin:$PATH:$GOPATH/bin"
-
+export GOROOT=/usr/local/go
+export GOPATH=~/go
+PATH="~/bin:~/.local/bin:$PATH:$GOPATH/bin"
 
 export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
 
 
-if [ -f ~/.bash_aliases ]; then
-. ~/.bash_aliases
+if [ -f ~/.dotfiles/bash_aliases ]; then
+. ~/.dotfiles/bash_aliases
+fi
+
+if [ -f ~/.bazel/bin/bazel-complete.bash ]; then
+  source ~/.bazel/bin/bazel-complete.bash
 fi
 
 export LANG=en_US.utf8
@@ -33,5 +36,7 @@ export LANG=en_US.utf8
 
 #prints error codes on red background. error (or lack) must _not_ change number of characters on the line or your terminal will get messed up.
 PS1='\[\033]0;\u@\h:\w\007\]$(es=$?; [[ $es -eq 0 ]] && echo "   " || printf "\[$(tput setab 1)\]%3s\[$(tput sgr0)\]" $es)'
-PS1+="\[$(tput setaf 2)\]\u@\[$(tput bold)\]\h\[$(tput sgr0)\]:\[$(tput setaf 4)\]\[$(tput bold)\]\w \$ \[$(tput sgr0)\]"
+PS1+="\[$(tput setaf 2)\]\u@\[$(tput bold)\]\h\[$(tput sgr0)\]:\[$(tput setaf 4;tput bold)\]\w\[$(tput setaf 3)\]\$ \[$(tput sgr0)\]"
 export PS1
+
+# kate: syntax Bash;

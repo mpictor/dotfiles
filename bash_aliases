@@ -32,9 +32,18 @@ alias du='du -h'
 alias free='free -m'
 alias lping='ping -c3 -W1'
 
+alias fpn='find . -name'
+
 alias hd='hexdump -C'
 
 alias apg='apg -M SNCL'
+
+#finicky. add /usr/lib64 to LD_LIBRARY_PATH so system's libgdiplus is found/used first.
+alias logv='LD_LIBRARY_PATH=/usr/lib64/:/home/mark/data/builds/core_main_systest/pub/gen/bin/l64:/home/mark/data/builds/system_main_systest/pub/gen/bin/l64/:/home/mark/data/builds/ininbuild_main_systest/pub/gen/bin/l64/ mono $(ls /home/mark/data/builds/core_main_systest/pub/gen/bin/l64/ininlogviewer-l64d-*.exe |tail -n1) 2>&1 >/dev/null &'
+
+alias ls='ls -h --color'
+alias la='ls -a'
+alias ll='ls -l'
 alias lls='ll'
 alias atree='tree | sed "s/├/\+/g; s/─/-/g; s/└/\\\/g;"'
 
@@ -59,7 +68,6 @@ alias cdiff='colordiff -uw'
 alias ip='ip -c'
 alias ip4='ip -4 addr'
 
-alias logv='LD_LIBRARY_PATH=/home/mark/data/builds/core_main_systest/pub/gen/bin/l64:/home/mark/data/builds/system_main_systest/pub/gen/bin/l64/:/home/mark/data/builds/ininbuild_main_systest/pub/gen/bin/l64/ mono $(ls /home/mark/data/builds/core_main_systest/pub/gen/bin/l64/ininlogviewer-l64d-*.exe |tail -n1) 2>&1 >/dev/null &'
 
 alias irss='LANG=en_US.UTF-8 /usr/bin/mosh --server="LANG=en_US.UTF-8 mosh-server" -- dockstar sh -c "tmux attach-session -t irssi || tmux new-session -s irssi irssi"'
 
@@ -147,10 +155,10 @@ function ssh() {
 
 function mosh() {
   konsoleprofile colors=linux-remote
-  LANG=en_US.UTF-8 /usr/bin/mosh --server="LANG=en_US.UTF-8 mosh-server" -- $@
+  /usr/bin/mosh $@
   konsoleprofile colors=Linux
 }
-alias wah='LC_ALL=  LANG=en_US.UTF-8  RemoteCmd TitledCmd MW /usr/bin/mosh --server="LANG=en_US.UTF-8 mosh-server" -p 5061 -- mark-work tmux new -A -D -swah'
+alias wah='RemoteCmd TitledCmd MW mosh -p 5061 -- mark-work tmux new -A -D -swah'
 
 alias corp='SolarCmd TitledCmd VI CVPN'
 alias dvpn='SolarCmd TitledCmd VD OVPN d'
@@ -163,6 +171,8 @@ alias amnesshia='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
 alias vssh='EDGE_VERSION=dummyv RemoteCmd TitledCmd vm vagrant ssh'
 alias vreboot="EDGE_VERSION=dummyv vagrant ssh -c 'sudo shutdown -r now'; sleep 40; vssh"
 alias vrp='TitledCmd vm vagrant reload --provision'
+
+alias vip='aws ec2 describe-instances --instance-id=$(cat .vagrant/machines/default/aws/id) | jq -r  .Reservations[].Instances[].PrivateIpAddress'
 
 #shows sizes of dirs with du
 sum() {
@@ -193,6 +203,14 @@ jpp() {
   jq . <$1 >$_pp && mv $_pp $1 || rm -f $_pp
   unset _pp
 }
+
+# print line $1 of file $2
+l() {
+  head -n$1 $2 | tail -n1
+}
+
+#add new group to your groups, without logout
+#exec sg <new group name> newgrp `id -gn`
 
 # machine-specific aliases, if applicable
 if [[ -f ~/.other_aliases ]]; then
