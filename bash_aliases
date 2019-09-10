@@ -13,7 +13,7 @@ alias krusader='quiet -l -p krusader'
 alias gitg='quiet -l -p gitg'
 alias qtcreator='quiet -l -p qtcreator'
 alias krdc='quiet -l -p krdc'
-alias sane='stty sane'
+alias sane='stty sane;setterm -linewrap on'
 alias liteide='quiet liteide'
 alias arduino='quiet arduino'
 
@@ -39,7 +39,7 @@ alias hd='hexdump -C'
 alias apg='apg -M SNCL'
 
 #finicky. add /usr/lib64 to LD_LIBRARY_PATH so system's libgdiplus is found/used first.
-alias logv='LD_LIBRARY_PATH=/usr/lib64/:/home/mark/data/builds/core_main_systest/pub/gen/bin/l64:/home/mark/data/builds/system_main_systest/pub/gen/bin/l64/:/home/mark/data/builds/ininbuild_main_systest/pub/gen/bin/l64/ mono $(ls /home/mark/data/builds/core_main_systest/pub/gen/bin/l64/ininlogviewer-l64d-*.exe |tail -n1) 2>&1 >/dev/null &'
+alias logv='ININ_TRACING=/home/mark/data/inin_tracing GTK2_RC_FILES=/usr/share/themes/Adwaita/gtk-2.0/gtkrc LD_LIBRARY_PATH=/usr/lib64/:/home/mark/data/builds/core_main_systest/pub/gen/bin/l64:/home/mark/data/builds/system_main_systest/pub/gen/bin/l64/:/home/mark/data/builds/ininbuild_main_systest/pub/gen/bin/l64/ mono $(ls --color=never /home/mark/data/builds/core_main_systest/pub/gen/bin/l64/ininlogviewer-l64d-*.exe |tail -n1) 2>&1 >/dev/null &'
 
 alias ls='ls -h --color'
 alias la='ls -a'
@@ -67,7 +67,7 @@ alias cdiff='colordiff -uw'
 
 alias ip='ip -c'
 alias ip4='ip -4 addr'
-
+alias which='alias | which -i'
 
 alias irss='LANG=en_US.UTF-8 /usr/bin/mosh --server="LANG=en_US.UTF-8 mosh-server" -- dockstar sh -c "tmux attach-session -t irssi || tmux new-session -s irssi irssi"'
 
