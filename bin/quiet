@@ -9,6 +9,15 @@ $0 [-l] [-p] command args...
 EOH
 }
 
+if [[ ! -e $XAUTHORITY ]]; then
+  echo "missing XAUTHORITY, attempting to fix..."
+  if [[ -e ~/.Xauthority ]]; then
+    cp ~/.Xauthority $XAUTHORITY
+  else
+    echo failed
+  fi
+fi
+
 #clean PATH, removing entries referencing \$HOME, inin, p4v
 function clean_path {
   tr ':' '\n' <<<$PATH |\
