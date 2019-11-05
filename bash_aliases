@@ -54,7 +54,9 @@ function big() {
   fi
   du -sh $d/* | sort -rh | head -n5
 }
-
+function gdeps(){
+  go list -f "$(echo -e '{{range .Deps}}{{.}}\n{{end}}')"
+}
 alias gnr='grep -Inr --color'
 alias grep='grep -I --color'
 alias cgrep='grep --color=force'

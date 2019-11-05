@@ -36,7 +36,7 @@ export LANG=en_US.utf8
 
 #prints error codes on red background. error (or lack) must _not_ change number of characters on the line or your terminal will get messed up.
 PS1='\[\033]0;\u@\h:\w\007\]$(es=$?; [[ $es -eq 0 ]] && echo "   " || printf "\[$(tput setab 1)\]%3s\[$(tput sgr0)\]" $es)'
-PS1+="\[$(tput setaf 2)\]\u@\[$(tput bold)\]\h\[$(tput sgr0)\]:\[$(tput setaf 4;tput bold)\]\w\[$(tput setaf 3)\]\$ \[$(tput sgr0)\]"
+PS1+="\[$(tput setaf 2)\]\u@\[$(tput bold)\]\h\[$(tput sgr0)\]:\[$(tput setaf 4;tput bold)\]\w\[$(tput setaf 3)\]\$ \[$(tput sgr0;setterm -linewrap on)\]"
 export PS1
 
 # kate: syntax Bash;

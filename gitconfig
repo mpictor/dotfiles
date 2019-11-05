@@ -27,3 +27,4 @@
     new = !gitk --all --not ORIG_HEAD
     #track = !git branch --set-upstream-to=origin/`git symbolic-ref --short HEAD`
     #pu = ![[ $(git config "branch.$(git rev-parse --abbrev-ref HEAD).merge") = '' ]] && git push -u || git push
+    rvs = remote -v show
