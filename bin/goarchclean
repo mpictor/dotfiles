@@ -1,0 +1,90 @@
+#!/bin/bash -e
+
+set -o pipefail
+
+#list files for linux and windows, on current arch
+
+
+
+# list files needed for an os
+rawneed(){
+  # $1 is pkg
+  go list -f '{{.GoFiles}}' $1 || exit 1
+  go list -f '{{.SFiles}}' $1 || exit 1
+}
+
+clean(){
+  tr '[] ' '\n\n\n' |\
+  sort -u |\
+  grep -v ^$
+}
+
+# list files needed for windows and/or linux, deduplicated
+need(){
+  # $1 is pkg
+  (
+    rawneed $1
+    GOOS=windows rawneed $1
+    echo "AUTHORS CONTRIBUTORS LICENSE PATENTS"  #if these exist, exclude from list of files to remove
+  ) | clean
+}
+
+notneeded(){
+  # $1 is pkg
+  needed=$(need $1)
+  remove=""
+  pth=$(sed 's|/$||' <<<$1) #trailing slash
+  if [[ ! -d $pth ]]; then
+    pth=$GOPATH/src/$pth
+  fi
+  if [[ ! -d $pth ]]; then
+    echo "bad path $1 ($pth)"
+    exit 1
+  fi
+  for p in $pth/*; do
+    f=$(basename $p)
+    keep=0
+    for n in $needed; do
+      if [[ $n == $f ]]; then
+        keep=1
+        break
+      fi
+    done
+    if [[ $keep -eq 0 ]];then
+      remove+=" $f"
+    fi
+  done
+  if [[ "$remove" == "" ]]; then
+    echo "no files to delete"
+    return
+  fi
+  if [[ $del -eq 1 ]]; then
+    echo "deleting files..."
+    for f in $remove; do rm "$pth/$f"; done
+  else
+    echo "delete the following:"
+    for f in $remove; do echo "$pth/$f"; done | column
+  fi
+}
+
+
+del=0
+if [[ "$1" == "-d" ]]; then
+  shift
+  del=1
+fi
+
+if [[ $# -ne 1 ]];then
+ echo "bad args - provide a relative or gopath"
+ echo "$0 [-d] path"
+ exit 1
+fi
+
+if [[ -d $1 ]]; then
+  if grep -vq '^\./' <<<$1; then
+    echo "path must be relative, or a valid go import path"
+    exit 1
+  fi
+fi
+
+notneeded $1
