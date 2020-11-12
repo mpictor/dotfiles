@@ -16,6 +16,7 @@ alias krdc='quiet -l -p krdc'
 alias sane='stty sane;setterm -linewrap on'
 alias liteide='quiet liteide'
 alias arduino='quiet arduino'
+alias slack='quiet slack'
 
 alias ssh-git='keychain /home/mark/.ssh/id_rsa.github'
 alias dcabb='keychain /home/mark/.ssh/bbucket_rsa'
@@ -29,9 +30,9 @@ alias s.='git status .'
 
 alias df='df -h'
 alias du='du -h'
-alias free='free -m'
+alias free='free -h'
 alias lping='ping -c3 -W1'
-
+alias xo='xdg-open'
 alias fpn='find . -name'
 
 alias hd='hexdump -C'

@@ -10,13 +10,16 @@
 	default = simple
 [alias]
     #branch
+    #(TODO) look at `git config issue.pfx`; if it exists, use that. if not, ???
     ni = "! [[ \"$@\" -gt 0 ]] && git checkout master && git checkout -b LEDGE-$@ || echo aborted \\\"$@\\\" "
     nj = "! [[ \"$@\" != \"\" ]] && git checkout master && git checkout -b \"NO-JIRA-$(tr ' ' '-' <<<$@)\" || echo aborted \\\"$@\\\" "
     #push
     pu = ![[ $(git config "branch.$(git symbolic-ref --short HEAD).merge") = '' ]] && git push -u origin $(git symbolic-ref --short HEAD) || git push
-    #update/prune
-    mpp = "!git checkout master && git pull && git po"
+    #master/pull/prune
+    mpp = "!git checkout master && git pull && git cb"
     po = remote prune origin
+    #better than po?
+    cb = "!git fetch -p && for branch in `git branch -vv --no-color | grep ': gone]' | awk '{print $1}'`; do git branch -d $branch; done"
     #commit creation
     ic = "!f() { bname=\"[$(git symbolic-ref --short HEAD)] \"; printf '|%*s%*s\n' 43 '<- 80 ->' 36 '|'; read -i \"$bname\" -e && [[ ${#bname} -lt ${#REPLY} ]] && git commit -m \"$REPLY\" || echo aborted; }; f; unset f bname"
     nc = "!f() { bname=\"[NO-JIRA] \"; printf '|%*s%*s\n' 43 '<- 80 ->' 36 '|'; read -i \"$bname\" -e && [[ ${#bname} -lt ${#REPLY} ]] && git commit -m \"$REPLY\" || echo aborted; }; f; unset f bname"
