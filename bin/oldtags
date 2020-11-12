@@ -1,0 +1,78 @@
+#!/bin/sh -e
+
+#oldtags - list / delete old tags.
+
+#https://stackoverflow.com/questions/48629441/remove-remote-git-tags-older-than-x-months
+
+show_help() {
+  cat <<EOH
+Lists/removes git tags.
+use:
+$0 -h
+ this help
+$0 [-p pattern] [-r]
+ list git tags
+   -p: filter on given pattern (regex)
+   -r: remove tags. Requires -p.
+EOH
+}
+
+list_tags() {
+  git for-each-ref --sort=taggerdate --format '%(refname:short) %(taggerdate:short)' refs/tags
+}
+
+filter_tags() {
+  if [[ "$pat" -ne "" ]]; then
+    echo grep "$pat" >&2
+    grep "$pat"
+  else
+    cat
+  fi
+}
+
+rm_tags(){
+  tags=$1
+  list=""
+  for t in $tags; do
+    list+=" :refs/tags/$(cut -d ' ' -f1 <<<$t)"
+  done
+  echo 'removing tags...'
+  echo git push origin $list
+  echo 'removing local tags with missing origin...'
+  echo git fetch --prune origin '+refs/tags/*:refs/tags/*'
+  echo "not 100% tested - disabled"
+  exit 1
+}
+
+unset rm pat tags list
+
+while getopts "hp:r" opt; do
+    case "$opt" in
+    h|\?)
+        show_help
+        exit 0
+        ;;
+    p)
+      pat=$OPTARG
+        ;;
+    r)
+      rm=yes
+        ;;
+    :)
+      echo $OPTARG requires arg 1>&2
+      show_help
+      exit 1
+    esac
+done
+
+if [[ $rm == "yes" ]]; then
+  if [[ $pat == "" ]]; then
+    echo "for safety, pattern required when using -r"
+    exit 1
+  fi
+  rm_tags "$( list_tags | filter_tags )"
+  exit 0
+fi
+list_tags | filter_tags
+
+list_tags|filter_tags|wc -l

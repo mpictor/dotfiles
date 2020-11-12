@@ -1,0 +1,9 @@
+#!/bin/sh
+
+(for i in $@; do
+  go list -f '{{.Imports}}' $i |\
+  tr '[] ' '\n\n\n'
+done)                          |\
+  sort -u                      |\
+  grep gprovision
+

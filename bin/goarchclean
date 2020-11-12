@@ -2,8 +2,8 @@
 
 set -o pipefail
 
-#list files for linux and windows, on current arch
-
+# list files for linux and windows, on current arch
+# remove all others
 
 
 # list files needed for an os
@@ -25,7 +25,7 @@ need(){
   (
     rawneed $1
     GOOS=windows rawneed $1
-    echo "AUTHORS CONTRIBUTORS LICENSE PATENTS"  #if these exist, exclude from list of files to remove
+    echo "AUTHORS CONTRIBUTORS LICENSE PATENTS COPYRIGHT"  #if these exist, exclude from list of files to remove
   ) | clean
 }
 
@@ -33,7 +33,7 @@ notneeded(){
   # $1 is pkg
   needed=$(need $1)
   remove=""
-  pth=$(sed 's|/$||' <<<$1) #trailing slash
+  pth=$(sed 's|/$||' <<<$1) #remove trailing slash
   if [[ ! -d $pth ]]; then
     pth=$GOPATH/src/$pth
   fi
@@ -82,7 +82,7 @@ fi
 
 if [[ -d $1 ]]; then
   if grep -vq '^\./' <<<$1; then
-    echo "path must be relative, or a valid go import path"
+    echo "path must be relative and begin with ./, or must be a valid go import path"
     exit 1
   fi
 fi
