@@ -1,0 +1,6 @@
+#!/bin/bash -e
+
+# ni -> New Issue
+# create JIRA-nnn branch using arg(s) as suffix
+#(TODO) look at `git config issue.pfx`; if it exists, use that. if not, ???
+[[ "$@" -gt 0 ]] && git checkout master && git checkout -b JIRA-$@ || echo aborted "$@"

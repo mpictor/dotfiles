@@ -15,9 +15,32 @@ if [[ $- != *i* ]] ; then
 fi
 
 
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=1000
+HISTFILESIZE=2000
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# If set, the pattern "**" used in a pathname expansion context will
+# match all files and zero or more directories and subdirectories.
+#shopt -s globstar
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+
 export GOROOT=/usr/local/go
 export GOPATH=~/go
-PATH="~/bin:~/.local/bin:$PATH:$GOPATH/bin"
+PATH="~/bin:~/.local/bin:/usr/local/go/bin:$PATH:$GOPATH/bin"
 
 export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
 
@@ -31,6 +54,8 @@ if [ -f ~/.bazel/bin/bazel-complete.bash ]; then
 fi
 
 export LANG=en_US.utf8
+
+export PROMPT_DIRTRIM=3
 
 #PS1='\[\033]0;\u@\h:\w\007\]\[\033[01;32m\]\u@\h\[\033[01;34m\] \w \$\[\033[00m\]'
 

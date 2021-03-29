@@ -150,9 +150,9 @@ function TitledCmd() {
   konsoleprofile tabtitle="%d : %n"
 }
 
-function ssh() {
+function cssh() {
   konsoleprofile colors=linux-remote
-  /usr/bin/ssh $@
+  $(which ssh) $@
   konsoleprofile colors=Linux
 }
 
@@ -208,12 +208,30 @@ jpp() {
 }
 
 # print line $1 of file $2
-l() {
+li() {
   head -n$1 $2 | tail -n1
 }
 
 #add new group to your groups, without logout
-#exec sg <new group name> newgrp `id -gn`
+updategroup(){
+  if [[ -z "$1" ]]; then
+    echo "group required"
+    return 1
+  fi
+  exec sg $1 newgrp $(id -gn)
+}
+
+# lets you jump to predefined locations on the filesystem
+j(){
+  [[ $# -ne 1 ]] && echo -e "j: 1 arg required:\n$(jq -C < ~/.dotfiles/.j)" && return 1
+  local d=$(envsubst <<<$(jq -r .$1 ~/.dotfiles/.j 2>/dev/null)); if [[ $? -eq 0 ]] && [[ -n "$d" ]]; then cd $d; fi
+}
+
+#like j but uses pushd
+pj(){
+  [[ $# -ne 1 ]] && echo -e "pj: 1 arg required:\n$(jq -C < ~/.dotfiles/.j)" && return 1
+  local d=$(envsubst <<<$(jq -r .$1 ~/.dotfiles/.j 2>/dev/null)); if [[ $? -eq 0 ]] && [[ -n "$d" ]]; then pushd $d; fi
+}
 
 # machine-specific aliases, if applicable
 if [[ -f ~/.other_aliases ]]; then

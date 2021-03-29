@@ -1,0 +1,5 @@
+#!/bin/bash -e
+
+# nj -> No Jira
+# create NO-JIRA-xyz branch using arg(s) as suffix
+[[ "$@" != "" ]] && git checkout master && git checkout -b "NO-JIRA-$(tr ' ' '-' <<<$@)" || echo aborted "$@"

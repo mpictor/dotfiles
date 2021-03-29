@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+# ic -> Issue Commit
+# create issue whose message begins with branch name in brackets. print marks for 80 char line len
+# and read one-line commit from stdin
+f() { 
+  bname="[$(git symbolic-ref --short HEAD)] "
+  printf '|%*s%*s\n' 43 '<- 80 ->' 36 '|'
+  read -i "$bname" -e && [[ ${#bname} -lt ${#REPLY} ]] && git commit -m "$REPLY" || echo aborted
+  }
+f
+unset f bname

@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+# nc -> No-jira Commit
+# create issue whose message begins with [NO-JIRA]. print marks for 80 char line len
+# and read one-line commit from stdin.
+f() { 
+  bname="[NO-JIRA] "
+  printf '|%*s%*s\n' 43 '<- 80 ->' 36 '|'
+  read -i "$bname" -e && [[ ${#bname} -lt ${#REPLY} ]] && git commit -m "$REPLY" || echo aborted
+}
+f
+unset f bname
